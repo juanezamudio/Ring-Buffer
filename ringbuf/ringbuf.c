@@ -2,8 +2,8 @@
  * Ring-Buffer Lab
  * April 4th, 2018
  *
- * jzamudio - Juan Zamudio
- * rhuamanicarpio - Rosario Huamani Carpio
+ * Juan Zamudio - jzamudio
+ * Rosario Huamani Carpio - rhuamanicarpio
  */
 
 /**
@@ -50,23 +50,60 @@ struct message {
   int quit;           /* non-zero if consumer should exit */
 };
 
-
-
-void *threadProducer (void *vargp) {
+void ringBuffer (pthread_t threadP, pthread_t threadC1, pthread_t threadC2, struct message msg) {
 
 }
 
-void *threadConsumer0 (void *vargp) {
-
+void threadProducer() {
+  return;
 }
 
-void *threadConsumer1 (void *vargp) {
-
+void threadConsumer0() {
+  return;
 }
 
-int main() {
-  pthread_create(&consumer0, NULL, &threadConsumer0(&consumer0), &consumer0);
-  pthread_create(&consumer1, NULL, &threadConsumer1(&consumer1), &consumer1);
+void threadConsumer1() {
+  return;
+}
+
+void getMilli(int consumer_sleep_milli) {
+  int milisec = consumer_sleep_milli; // length of time to sleep, in miliseconds
+  struct timespec req = {0};
+  req.tv_sec = 0;
+  req.tv_nsec = milisec * 1000000L;
+  nanosleep(&req, (struct timespec *)NULL);
+}
+
+int main(int argc, char **argv) {
+  // pthread_create(&consumer0, NULL, threadConsumer0, NULL);
+  // pthread_create(&consumer1, NULL, threadConsumer1, NULL);
+  // pthread_create(&producer, NULL, threadProducer, NULL);
+
+  char inputline[100];
+  int value;
+  int producer_sleep;
+  int consumer_sleep;
+  int print_code;
+  int line_number = 1;
+
+  struct message msg;
+
+  while (fgets(inputline, 1000, stdin) != NULL) {
+      sscanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code);
+      printf("%s", inputline);
+
+      msg.value = value;
+      msg.consumer_sleep = consumer_sleep;
+      msg.print_code = print_code;
+      msg.line = line_number;
+      msg.quit = 0;
+
+      if (consumer_sleep != 0) {
+        getMilli(consumer_sleep);
+      }
+
+      line_number++;
+  }
 
 
 }
