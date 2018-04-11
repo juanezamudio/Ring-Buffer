@@ -41,6 +41,7 @@ pthread_cond_t has_space = PTHREAD_COND_INITIALIZER;
 pthread_t consumer0;
 pthread_t consumer1;
 pthread_t producer;
+int total_sum = 0;
 
 struct message {
   int value;          /* value to be passed to consumer */
@@ -50,20 +51,38 @@ struct message {
   int quit;           /* non-zero if consumer should exit */
 };
 
+void enqueue(struct message msg) {
+  pthread_mutex_lock(&mutex);
+  // while ("no space") {
+    pthread_cond_wait(&has_space, &mutex);
+    
+    //TODO: critical section
+  // }
+  pthread_mutex_unlock(&mutex);
+  pthread_cond_signal(&has_value);
+}
+
+void dequeue(struct message msg) {
+
+}
+
 void ringBuffer (pthread_t threadP, pthread_t threadC1, pthread_t threadC2, struct message msg) {
 
 }
 
-void threadProducer() {
-  return;
+// void *threadProducer(int value, int line_number) {
+//   printf("Producer: value %d from input line %d\n", value, line_number);
+// }
+
+void *threadConsumer0(void *index) {
+
+  return index;
 }
 
-void threadConsumer0() {
-  return;
-}
-
-void threadConsumer1() {
-  return;
+void *threadConsumer1(void *index) {
+  pthread_mutex_lock
+  pthread_mutex_unlock
+  return index;
 }
 
 void getMilli(int consumer_sleep_milli) {
@@ -75,9 +94,13 @@ void getMilli(int consumer_sleep_milli) {
 }
 
 int main(int argc, char **argv) {
-  // pthread_create(&consumer0, NULL, threadConsumer0, NULL);
-  // pthread_create(&consumer1, NULL, threadConsumer1, NULL);
-  // pthread_create(&producer, NULL, threadProducer, NULL);
+  setlinebuf(stdout);
+
+  int retC0;
+  int retC1;
+  // int retP;
+  int consumer0_index = 0;
+  int consumer1_index = 1;
 
   char inputline[100];
   int value;
@@ -86,24 +109,39 @@ int main(int argc, char **argv) {
   int print_code;
   int line_number = 1;
 
+  retC0 = pthread_create(&consumer0, NULL, threadConsumer0, &consumer0_index);
+  retC1 = pthread_create(&consumer1, NULL, threadConsumer1, &consumer1_index);
+  // retP = pthread_create(&producer, NULL, threadProducer(value, line_number), NULL);
+
   struct message msg;
+  struct message msgFinal1;
+  struct message msgFinal2;
 
   while (fgets(inputline, 1000, stdin) != NULL) {
-      sscanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code);
-      printf("%s", inputline);
 
-      msg.value = value;
-      msg.consumer_sleep = consumer_sleep;
-      msg.print_code = print_code;
-      msg.line = line_number;
-      msg.quit = 0;
+      if (sscanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code) != EOF) {
+        printf("%s", inputline);
 
-      if (consumer_sleep != 0) {
-        getMilli(consumer_sleep);
+        msg.value = value;
+        msg.consumer_sleep = consumer_sleep;
+        msg.print_code = print_code;
+        msg.line = line_number;
+        msg.quit = 0;
+
+        if (consumer_sleep != 0) {
+          getMilli(consumer_sleep);
+        }
+
+        line_number++;
+      } else {
+        msgFinal1.quit = 1;
+        msgFinal2.quit = 1;
+
       }
-
-      line_number++;
   }
 
+  pthread_join(consumer0, NULL);
+  pthread_join(consumer1, NULL);
 
+  printf("Main: total sum is %d\n", total_sum);
 }
