@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define BUFFER_SIZE 10;
+#define BUFFER_SIZE 10
 
 // global declarations
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -59,38 +59,53 @@ void enqueue(struct message msg) {
   pthread_mutex_lock(&mutex);
 
   if(count < BUFFER_SIZE) {
-    shared_buffer[buffer_index] = msg;
+    shared_buffer[enqueue_index] = msg;
     count++;
-    buffer_index++;
+
+    if (enqueue_index == (BUFFER_SIZE - 1)) {
+      enqueue_index = 0;
+    } else {
+      enqueue_index++;
+    }
+
   } else {
     pthread_cond_wait(&allow_produce, &mutex);
   }
+
   pthread_mutex_unlock(&mutex);
   pthread_cond_signal(&allow_consume);
 }
 
-void dequeue() {
+struct message dequeue() {
+  struct message result;
+
   pthread_mutex_lock(&mutex);
 
   if (count == BUFFER_SIZE) {
-    buffer_index = 0;
-    count--;
-    return shared_buffer[buffer_index];
+    dequeue_index = 0;
   } else {
+    dequeue_index++;
     pthread_cond_wait(&allow_consume, &mutex);
   }
+
+  result = shared_buffer[dequeue_index];
+  count--;
 
   pthread_mutex_unlock(&mutex);
   pthread_cond_signal(&allow_produce);
 
-  if
+  return result;
 }
 
-// void ringBuffer (pthread_t threadP, pthread_t threadC1, pthread_t threadC2, struct message msg) {
-//
-// }
+void nsleep(int sleep_milli) {
+  int millisec = sleep_milli; // length of time to sleep, in miliseconds
+  struct timespec req = {0};
+  req.tv_sec = 0;
+  req.tv_nsec = millisec * 1000000L;
+  nanosleep(&req, (struct timespec *)NULL);
+}
 
-void *threadProducer(int value, int line_number) {
+void *threadProducer() {
   char inputline[100];
   int value;
   int producer_sleep;
@@ -130,26 +145,46 @@ void *threadProducer(int value, int line_number) {
   }
 
   printf("Producer: value %d from input line %d\n", value, line_number);
+
+  return NULL;
 }
 
 void *threadConsumer0(void *index) {
-  dequeue(struct message msg)
+  struct message msg = dequeue();
 
-  return index;
+  if (msg.quit == 0) {
+    nsleep(msg.consumer_sleep);
+    total_sum += msg.value;
+
+    if (msg.print_code == 2 || msg.print_code == 3) {
+      printf("Consumer %d: %d from input line %d; sum = %d\n", (int)index, msg.value, msg.line, total_sum);
+    }
+  } else {
+    printf("Consumer %d: final sum is %d\n", (int)index, total_sum);
+  }
+
+  index = &total_sum;
+
+  return NULL;
 }
 
 void *threadConsumer1(void *index) {
-  pthread_mutex_lock
-  pthread_mutex_unlock
-  return index;
-}
+  struct message msg = dequeue();
 
-void nsleep(int sleep_milli) {
-  int millisec = sleep_milli; // length of time to sleep, in miliseconds
-  struct timespec req = {0};
-  req.tv_sec = 0;
-  req.tv_nsec = millisec * 1000000L;
-  nanosleep(&req, (struct timespec *)NULL);
+  if (msg.quit == 0) {
+    nsleep(msg.consumer_sleep);
+    total_sum += msg.value;
+
+    if (msg.print_code == 2 || msg.print_code == 3) {
+      printf("Consumer %d: %d from input line %d; sum = %d\n", (int)index, msg.value, msg.line, total_sum);
+    }
+  } else {
+    printf("Consumer %d: final sum is %d\n", (int)index, total_sum);
+  }
+
+  index = &total_sum;
+
+  return NULL;
 }
 
 int main(int argc, char **argv) {
@@ -157,17 +192,19 @@ int main(int argc, char **argv) {
 
   int retC0;
   int retC1;
-  // int retP;
+  int retP;
   int consumer0_index = 0;
   int consumer1_index = 1;
 
   retC0 = pthread_create(&consumer0, NULL, threadConsumer0, &consumer0_index);
   retC1 = pthread_create(&consumer1, NULL, threadConsumer1, &consumer1_index);
-  // retP = pthread_create(&producer, NULL, threadProducer(value, line_number), NULL);
+  retP = pthread_create(&producer, NULL, threadProducer, NULL);
+
 
 
   pthread_join(consumer0, NULL);
   pthread_join(consumer1, NULL);
+  
 
   printf("Main: total sum is %d\n", total_sum);
 }
