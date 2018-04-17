@@ -119,7 +119,7 @@ void *threadProducer() {
   struct message msgFinal1;
   struct message msgFinal2;
 
-  while (fgets(inputline, 1000, stdin) != NULL) {
+  while (fgets(inputline, 100, stdin) != NULL) {
 
       if (sscanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code) != EOF) {
 
@@ -153,51 +153,51 @@ void *threadProducer() {
 void *threadConsumer0(void *index) {
   struct message msg = dequeue();
 
-  if (msg.quit == 0) {
-    nsleep(msg.consumer_sleep);
-    total_sum += msg.value;
+  while(1) {
+    if (msg.quit == 0) {
+      nsleep(msg.consumer_sleep);
+      total_sum += msg.value;
 
-    if (msg.print_code == 2 || msg.print_code == 3) {
-      printf("Consumer %d: %d from input line %d; sum = %d\n", *((int *)index), msg.value, msg.line, total_sum);
+      if (msg.print_code == 2 || msg.print_code == 3) {
+        printf("Consumer %d: %d from input line %d; sum = %d\n", *((int *)index), msg.value, msg.line, total_sum);
+      }
+    } else {
+      printf("Consumer %d: final sum is %d\n", *((int *)index), total_sum);
+
+      index = &total_sum;
+      pthread_exit(index);
     }
-  } else {
-    printf("Consumer %d: final sum is %d\n", *((int *)index), total_sum);
   }
-
-  index = &total_sum;
-
   return NULL;
 }
 
 void *threadConsumer1(void *index) {
   struct message msg = dequeue();
 
-  if (msg.quit == 0) {
-    nsleep(msg.consumer_sleep);
-    total_sum += msg.value;
+  while(1) {
+    if (msg.quit == 0) {
+      nsleep(msg.consumer_sleep);
+      total_sum += msg.value;
 
-    if (msg.print_code == 2 || msg.print_code == 3) {
-      printf("Consumer %d: %d from input line %d; sum = %d\n", *((int *)index), msg.value, msg.line, total_sum);
+      if (msg.print_code == 2 || msg.print_code == 3) {
+        printf("Consumer %d: %d from input line %d; sum = %d\n", *((int *)index), msg.value, msg.line, total_sum);
+      }
+    } else {
+      printf("Consumer %d: final sum is %d\n", *((int *)index), total_sum);
+
+      index = &total_sum;
+      pthread_exit(index);
     }
-  } else {
-    printf("Consumer %d: final sum is %d\n", *((int *)index), total_sum);
   }
-
-  index = &total_sum;
-
   return NULL;
 }
 
 int main(int argc, char **argv) {
   setlinebuf(stdout);
 
-  int retC0;
-  int retC1;
-  int retP;
-
-  retC0 = pthread_create(&consumer0, NULL, threadConsumer0, &consumer0_index);
-  retC1 = pthread_create(&consumer1, NULL, threadConsumer1, &consumer1_index);
-  retP = pthread_create(&producer, NULL, threadProducer, NULL);
+  pthread_create(&consumer0, NULL, threadConsumer0, &consumer0_index);
+  pthread_create(&consumer1, NULL, threadConsumer1, &consumer1_index);
+  pthread_create(&producer, NULL, threadProducer, NULL);
 
 
 
@@ -209,4 +209,5 @@ int main(int argc, char **argv) {
 
 
   printf("Main: total sum is %d\n", total_sum);
+  return 1;
 }
