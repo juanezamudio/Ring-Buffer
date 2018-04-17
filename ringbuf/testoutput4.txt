@@ -1,1 +1,3 @@
+Consumer 0: final sum is 0
+Consumer 1: final sum is 0
 Main: total sum is 0

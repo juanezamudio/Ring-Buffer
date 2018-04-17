@@ -60,18 +60,17 @@ int consumer1_index = 1;
 void enqueue(struct message msg) {
   pthread_mutex_lock(&mutex);
 
-  if(count < BUFFER_SIZE) {
-    shared_buffer[enqueue_index] = msg;
-    count++;
-
-    if (enqueue_index == (BUFFER_SIZE - 1)) {
-      enqueue_index = 0;
-    } else {
-      enqueue_index++;
-    }
-
-  } else {
+  if(count == BUFFER_SIZE) {
     pthread_cond_wait(&allow_produce, &mutex);
+  }
+
+  shared_buffer[enqueue_index] = msg;
+  count++;
+
+  if (enqueue_index == (BUFFER_SIZE - 1)) {
+    enqueue_index = 0;
+  } else {
+    enqueue_index++;
   }
 
   pthread_mutex_unlock(&mutex);
@@ -83,15 +82,18 @@ struct message dequeue() {
 
   pthread_mutex_lock(&mutex);
 
-  if (count == BUFFER_SIZE) {
-    dequeue_index = 0;
-  } else {
-    dequeue_index++;
+  if (count == 0) {
     pthread_cond_wait(&allow_consume, &mutex);
   }
 
   result = shared_buffer[dequeue_index];
   count--;
+
+  if (dequeue_index == BUFFER_SIZE - 1) {
+    dequeue_index = 0;
+  } else {
+    dequeue_index++;
+  }
 
   pthread_mutex_unlock(&mutex);
   pthread_cond_signal(&allow_produce);
@@ -119,10 +121,10 @@ void *threadProducer() {
   struct message msgFinal1;
   struct message msgFinal2;
 
-  while (fgets(inputline, 100, stdin) != NULL) {
+  // while (fgets(inputline, 100, stdin) != NULL) {
 
-      if (sscanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code) != EOF) {
-
+      // if (sscanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code) != EOF) {
+    while (scanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code) > 0) {
         if (producer_sleep != 0) {
           nsleep(producer_sleep);
         }
@@ -135,25 +137,38 @@ void *threadProducer() {
 
         enqueue(msg);
 
-        line_number++;
-      } else {
-        msgFinal1.quit = 1;
-        msgFinal2.quit = 1;
+        if (msg.print_code == 1 || msg.print_code == 3) {
+          printf("Producer: value %d from input line %d\n", value, line_number);
+        }
 
-        enqueue(msgFinal1);
-        enqueue(msgFinal2);
-      }
+      // } else {
+      //   msgFinal1.quit = 1;
+      //   msgFinal2.quit = 1;
+      //
+      //   enqueue(msgFinal1);
+      //   enqueue(msgFinal2);
+      // }
+      //
+      // if (msg.print_code == 1 || msg.print_code == 3) {
+      //   printf("Producer: value %d from input line %d\n", value, line_number);
+      // }
+      line_number++;
   }
 
-  printf("Producer: value %d from input line %d\n", value, line_number);
+  msgFinal1.quit = 1;
+  msgFinal2.quit = 1;
+
+  enqueue(msgFinal1);
+  enqueue(msgFinal2);
 
   return NULL;
 }
 
 void *threadConsumer0(void *index) {
-  struct message msg = dequeue();
 
   while(1) {
+    struct message msg = dequeue();
+
     if (msg.quit == 0) {
       nsleep(msg.consumer_sleep);
       total_sum += msg.value;
@@ -168,13 +183,16 @@ void *threadConsumer0(void *index) {
       pthread_exit(index);
     }
   }
+
+
   return NULL;
 }
 
 void *threadConsumer1(void *index) {
-  struct message msg = dequeue();
 
   while(1) {
+    struct message msg = dequeue();
+
     if (msg.quit == 0) {
       nsleep(msg.consumer_sleep);
       total_sum += msg.value;
@@ -189,23 +207,25 @@ void *threadConsumer1(void *index) {
       pthread_exit(index);
     }
   }
+
+
   return NULL;
 }
 
 int main(int argc, char **argv) {
   setlinebuf(stdout);
 
+  pthread_mutex_init(&mutex, NULL);
+  pthread_cond_init(&allow_produce, NULL);
+  pthread_cond_init(&allow_consume, NULL);
+
   pthread_create(&consumer0, NULL, threadConsumer0, &consumer0_index);
   pthread_create(&consumer1, NULL, threadConsumer1, &consumer1_index);
   pthread_create(&producer, NULL, threadProducer, NULL);
 
-
-
   pthread_join(consumer0, NULL);
   pthread_join(consumer1, NULL);
-  // pthread_join(producer, NULL);
-  //
-  // threadProducer();
+  pthread_join(producer, NULL);
 
 
   printf("Main: total sum is %d\n", total_sum);
