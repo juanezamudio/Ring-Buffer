@@ -1,0 +1,46 @@
+Producer: value -8 from input line 2
+Producer: value 1 from input line 3
+Consumer 1: 1 from input line 3; sum = -7
+Producer: value 10 from input line 4
+Producer: value 0 from input line 6
+Producer: value -1 from input line 8
+Consumer 0: 3 from input line 1; sum = 6
+Consumer 0: 0 from input line 6; sum = 6
+Consumer 0: -1 from input line 8; sum = -1
+Consumer 1: 4 from input line 5; sum = 3
+Consumer 0: 8 from input line 9; sum = 11
+Producer: value 10 from input line 14
+Producer: value 10 from input line 16
+Producer: value 5 from input line 17
+Consumer 1: 5 from input line 12; sum = 23
+Producer: value -2 from input line 20
+Producer: value 1 from input line 21
+Consumer 0: 1 from input line 15; sum = 55
+Consumer 0: -2 from input line 20; sum = 44
+Consumer 0: 9 from input line 23; sum = 53
+Consumer 1: 3 from input line 24; sum = 56
+Producer: value 6 from input line 26
+Producer: value -3 from input line 27
+Producer: value -8 from input line 32
+Consumer 0: -4 from input line 30; sum = 41
+Consumer 0: -7 from input line 31; sum = 34
+Consumer 0: -8 from input line 32; sum = 26
+Consumer 1: 6 from input line 26; sum = 38
+Consumer 0: -4 from input line 34; sum = 34
+Producer: value -7 from input line 36
+Producer: value -1 from input line 39
+Consumer 1: 3 from input line 40; sum = 39
+Producer: value 10 from input line 42
+Consumer 1: 1 from input line 41; sum = 40
+Producer: value 0 from input line 43
+Consumer 1: -2 from input line 44; sum = 54
+Producer: value -8 from input line 46
+Consumer 1: -8 from input line 46; sum = 39
+Consumer 0: -8 from input line 47; sum = 31
+Producer: value 1 from input line 49
+Consumer 0: 1 from input line 49; sum = 32
+Consumer 0: 11 from input line 50; sum = 43
+Consumer 0: final sum is 43
+Consumer 1: -1 from input line 48; sum = 42
+Consumer 1: final sum is 42
+Main: total sum is 42

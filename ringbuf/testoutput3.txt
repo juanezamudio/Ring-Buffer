@@ -1,0 +1,105 @@
+Producer: value 0 from input line 1
+Consumer 0: 0 from input line 1; sum = 0
+Producer: value -1 from input line 2
+Consumer 1: -1 from input line 2; sum = -1
+Producer: value -3 from input line 3
+Producer: value 4 from input line 4
+Consumer 0: -3 from input line 3; sum = -4
+Producer: value 1 from input line 5
+Consumer 1: 4 from input line 4; sum = 0
+Producer: value 2 from input line 6
+Consumer 0: 1 from input line 5; sum = 1
+Consumer 1: 2 from input line 6; sum = 3
+Producer: value 2 from input line 7
+Producer: value -4 from input line 8
+Consumer 1: -4 from input line 8; sum = -1
+Producer: value -8 from input line 9
+Consumer 0: 2 from input line 7; sum = 1
+Consumer 1: -8 from input line 9; sum = -7
+Producer: value 10 from input line 10
+Producer: value 3 from input line 11
+Producer: value -3 from input line 12
+Consumer 0: 10 from input line 10; sum = 3
+Producer: value 1 from input line 13
+Consumer 1: 3 from input line 11; sum = 6
+Producer: value 3 from input line 14
+Consumer 0: -3 from input line 12; sum = 3
+Consumer 1: 1 from input line 13; sum = 4
+Consumer 0: 3 from input line 14; sum = 7
+Producer: value -9 from input line 15
+Producer: value 2 from input line 16
+Consumer 1: -9 from input line 15; sum = -2
+Producer: value 2 from input line 17
+Consumer 0: 2 from input line 16; sum = 0
+Consumer 1: 2 from input line 17; sum = 2
+Producer: value -2 from input line 18
+Producer: value -7 from input line 19
+Consumer 0: -2 from input line 18; sum = 0
+Producer: value -6 from input line 20
+Consumer 1: -7 from input line 19; sum = -7
+Consumer 0: -6 from input line 20; sum = -13
+Producer: value -7 from input line 21
+Consumer 1: -7 from input line 21; sum = -20
+Producer: value 6 from input line 22
+Producer: value -1 from input line 23
+Producer: value -4 from input line 24
+Consumer 1: -1 from input line 23; sum = -21
+Producer: value 8 from input line 25
+Producer: value -2 from input line 26
+Producer: value -2 from input line 27
+Consumer 1: -4 from input line 24; sum = -25
+Consumer 0: 6 from input line 22; sum = -19
+Producer: value 4 from input line 28
+Consumer 0: -2 from input line 26; sum = -21
+Producer: value 6 from input line 29
+Consumer 1: 8 from input line 25; sum = -13
+Consumer 1: 4 from input line 28; sum = -9
+Consumer 0: -2 from input line 27; sum = -11
+Consumer 1: 6 from input line 29; sum = -5
+Producer: value 3 from input line 30
+Consumer 0: 3 from input line 30; sum = -2
+Producer: value 10 from input line 31
+Consumer 1: 10 from input line 31; sum = 8
+Producer: value 8 from input line 32
+Producer: value 9 from input line 33
+Consumer 0: 8 from input line 32; sum = 16
+Producer: value 5 from input line 34
+Consumer 1: 9 from input line 33; sum = 25
+Producer: value 1 from input line 35
+Consumer 1: 1 from input line 35; sum = 26
+Producer: value 0 from input line 36
+Producer: value -6 from input line 37
+Consumer 1: 0 from input line 36; sum = 26
+Consumer 0: 5 from input line 34; sum = 31
+Consumer 1: -6 from input line 37; sum = 25
+Producer: value 9 from input line 38
+Consumer 0: 9 from input line 38; sum = 34
+Producer: value -7 from input line 39
+Consumer 1: -7 from input line 39; sum = 27
+Producer: value -1 from input line 40
+Consumer 0: -1 from input line 40; sum = 26
+Producer: value 5 from input line 41
+Producer: value -9 from input line 42
+Consumer 1: 5 from input line 41; sum = 31
+Consumer 0: -9 from input line 42; sum = 22
+Producer: value 8 from input line 43
+Producer: value 5 from input line 44
+Producer: value 0 from input line 45
+Consumer 1: 8 from input line 43; sum = 30
+Consumer 0: 5 from input line 44; sum = 35
+Producer: value 2 from input line 46
+Producer: value 1 from input line 47
+Consumer 1: 0 from input line 45; sum = 35
+Consumer 1: 1 from input line 47; sum = 36
+Consumer 0: 2 from input line 46; sum = 38
+Producer: value -1 from input line 48
+Producer: value -9 from input line 49
+Producer: value 4 from input line 50
+Consumer 0: -9 from input line 49; sum = 29
+Producer: value 10 from input line 51
+Consumer 0: 4 from input line 50; sum = 33
+Consumer 0: 10 from input line 51; sum = 43
+Consumer 0: final sum is 43
+Consumer 1: -1 from input line 48; sum = 42
+Consumer 1: final sum is 42
+Main: total sum is 42
