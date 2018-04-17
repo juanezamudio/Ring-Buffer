@@ -54,6 +54,8 @@ struct message shared_buffer[BUFFER_SIZE];
 int count = 0;
 int enqueue_index = 0;        // where to produce
 int dequeue_index = 0;        // where to consume
+int consumer0_index = 0;
+int consumer1_index = 1;
 
 void enqueue(struct message msg) {
   pthread_mutex_lock(&mutex);
@@ -120,7 +122,6 @@ void *threadProducer() {
   while (fgets(inputline, 1000, stdin) != NULL) {
 
       if (sscanf(inputline, "%d %d %d %d", &value, &producer_sleep, &consumer_sleep, &print_code) != EOF) {
-        printf("%s", inputline);
 
         if (producer_sleep != 0) {
           nsleep(producer_sleep);
@@ -157,10 +158,10 @@ void *threadConsumer0(void *index) {
     total_sum += msg.value;
 
     if (msg.print_code == 2 || msg.print_code == 3) {
-      printf("Consumer %d: %d from input line %d; sum = %d\n", (int)index, msg.value, msg.line, total_sum);
+      printf("Consumer %d: %d from input line %d; sum = %d\n", *((int *)index), msg.value, msg.line, total_sum);
     }
   } else {
-    printf("Consumer %d: final sum is %d\n", (int)index, total_sum);
+    printf("Consumer %d: final sum is %d\n", *((int *)index), total_sum);
   }
 
   index = &total_sum;
@@ -176,10 +177,10 @@ void *threadConsumer1(void *index) {
     total_sum += msg.value;
 
     if (msg.print_code == 2 || msg.print_code == 3) {
-      printf("Consumer %d: %d from input line %d; sum = %d\n", (int)index, msg.value, msg.line, total_sum);
+      printf("Consumer %d: %d from input line %d; sum = %d\n", *((int *)index), msg.value, msg.line, total_sum);
     }
   } else {
-    printf("Consumer %d: final sum is %d\n", (int)index, total_sum);
+    printf("Consumer %d: final sum is %d\n", *((int *)index), total_sum);
   }
 
   index = &total_sum;
@@ -193,8 +194,6 @@ int main(int argc, char **argv) {
   int retC0;
   int retC1;
   int retP;
-  int consumer0_index = 0;
-  int consumer1_index = 1;
 
   retC0 = pthread_create(&consumer0, NULL, threadConsumer0, &consumer0_index);
   retC1 = pthread_create(&consumer1, NULL, threadConsumer1, &consumer1_index);
@@ -204,7 +203,10 @@ int main(int argc, char **argv) {
 
   pthread_join(consumer0, NULL);
   pthread_join(consumer1, NULL);
-  
+  // pthread_join(producer, NULL);
+  //
+  // threadProducer();
+
 
   printf("Main: total sum is %d\n", total_sum);
 }

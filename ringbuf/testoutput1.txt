@@ -1,7 +1,3 @@
-3 1000 0 3
-5 1000 0 3
--3 1000 0 3
-Main: total sum is 0
--5 1000 0 3
-8 1000 0 3
--8 1000 0 3
+Consumer 0: -3 from input line 3; sum = -3
+Consumer 1: -3 from input line 3; sum = -6
+Main: total sum is -6
